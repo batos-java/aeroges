@@ -1,0 +1,58 @@
+{
+  "name": "AeroGes - Gestion des Autorisations",
+  "short_name": "AeroGes",
+  "description": "Application de gestion des autorisations ASA et AEA pour aéronefs",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4f46e5",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "business"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Extraire autorisation",
+      "short_name": "Extraire",
+      "description": "Extraire une autorisation depuis WhatsApp",
+      "url": "/?action=extract",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Ajouter autorisation",
+      "short_name": "Ajouter",
+      "description": "Ajouter manuellement une autorisation",
+      "url": "/?action=add",
+      "icons": [
+        {
+          "src": "/icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}
