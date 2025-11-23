@@ -177,22 +177,23 @@ export default function App() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50">
       {/* Header */}
       <header className="bg-white shadow-sm sticky top-0 z-10">
-        <div className="px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="bg-indigo-600 p-2 rounded-lg">
-                <Plane className="w-6 h-6 text-white" />
+        <div className="px-4 py-3">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3 flex-1 min-w-0">
+              <div className="bg-indigo-600 p-2.5 rounded-lg flex-shrink-0">
+                <Plane className="w-5 h-5 text-white" />
               </div>
-              <div>
-                <h1 className="text-indigo-900">AeroGes</h1>
-                <p className="text-gray-500 text-sm">Gestion des autorisations</p>
+              <div className="min-w-0">
+                <h1 className="text-indigo-900 truncate">AeroGes</h1>
+                <p className="text-gray-500 text-xs truncate">Gestion des autorisations</p>
               </div>
             </div>
             {currentView === 'list' && (
               <button
                 onClick={toggleNotifications}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2.5 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0"
                 title={notificationsEnabled ? 'Désactiver les notifications' : 'Activer les notifications'}
+                aria-label={notificationsEnabled ? 'Notifications activées' : 'Notifications désactivées'}
               >
                 {notificationsEnabled ? (
                   <Bell className="w-5 h-5 text-indigo-600" />
@@ -206,14 +207,14 @@ export default function App() {
           {/* Search Bar - Only on list view */}
           {currentView === 'list' && (
             <>
-              <div className="mt-4 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <div className="mt-3 relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
                 <input
                   type="text"
                   placeholder="Rechercher une autorisation..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
+                  className="w-full pl-9 pr-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
                 />
               </div>
 
@@ -221,7 +222,7 @@ export default function App() {
               <div className="mt-3 flex gap-2">
                 <button
                   onClick={() => setFilterType('all')}
-                  className={`px-4 py-2 rounded-lg transition-colors ${
+                  className={`px-4 py-2 rounded-lg transition-colors text-sm ${
                     filterType === 'all'
                       ? 'bg-indigo-600 text-white'
                       : 'bg-gray-100 text-gray-700'
@@ -231,7 +232,7 @@ export default function App() {
                 </button>
                 <button
                   onClick={() => setFilterType('ASA')}
-                  className={`px-4 py-2 rounded-lg transition-colors ${
+                  className={`px-4 py-2 rounded-lg transition-colors text-sm ${
                     filterType === 'ASA'
                       ? 'bg-indigo-600 text-white'
                       : 'bg-gray-100 text-gray-700'
@@ -241,7 +242,7 @@ export default function App() {
                 </button>
                 <button
                   onClick={() => setFilterType('AEA')}
-                  className={`px-4 py-2 rounded-lg transition-colors ${
+                  className={`px-4 py-2 rounded-lg transition-colors text-sm ${
                     filterType === 'AEA'
                       ? 'bg-indigo-600 text-white'
                       : 'bg-gray-100 text-gray-700'
