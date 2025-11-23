@@ -1,4 +1,4 @@
-const CACHE_NAME = 'aeroges-v1';
+const CACHE_NAME = 'aeroges-v3'; // Version mise à jour pour forcer le rechargement
 const BASE_PATH = '/aeroges/'; // Ajustez selon le nom de votre repo GitHub
 const urlsToCache = [
   BASE_PATH,
