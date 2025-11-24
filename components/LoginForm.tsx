@@ -18,7 +18,7 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
 
   // Credentials par défaut - À PERSONNALISER
   const DEFAULT_USERNAME = 'admin';
-  const DEFAULT_PASSWORD = 'aeroges2024';
+  const DEFAULT_PASSWORD = 'aeroges2025';
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
