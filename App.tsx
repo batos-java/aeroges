@@ -114,12 +114,21 @@ export default function App() {
         const alreadyNotified = localStorage.getItem(notificationKey);
 
         if (notificationDays.includes(daysRemaining) && !alreadyNotified) {
-          new Notification('AeroGes - Expiration proche', {
-            body: `L'autorisation ${auth.type} #${auth.number} de ${auth.company} expire dans ${daysRemaining} jour${daysRemaining > 1 ? 's' : ''}.`,
-            icon: '/favicon.ico',
-            tag: auth.id,
-          });
-          localStorage.setItem(notificationKey, 'true');
+          try {
+            // Vérifier à nouveau la permission avant de créer la notification
+            if ('Notification' in window && Notification.permission === 'granted') {
+              new Notification('AeroGes - Expiration proche', {
+                body: `L'autorisation ${auth.type} #${auth.number} de ${auth.company} expire dans ${daysRemaining} jour${daysRemaining > 1 ? 's' : ''}.`,
+                icon: '/favicon.ico',
+                tag: auth.id,
+              });
+              localStorage.setItem(notificationKey, 'true');
+            }
+          } catch (error) {
+            console.error('Error creating notification:', error);
+            // Désactiver les notifications en cas d'erreur
+            setNotificationsEnabled(false);
+          }
         }
       });
     };
@@ -139,18 +148,28 @@ export default function App() {
       return;
     }
 
-    if (Notification.permission === 'granted') {
-      setNotificationsEnabled(!notificationsEnabled);
-    } else if (Notification.permission !== 'denied') {
-      const permission = await Notification.requestPermission();
-      if (permission === 'granted') {
-        setNotificationsEnabled(true);
-        new Notification('AeroGes', {
-          body: 'Les notifications sont maintenant activées !',
-        });
+    try {
+      if (Notification.permission === 'granted') {
+        setNotificationsEnabled(!notificationsEnabled);
+      } else if (Notification.permission !== 'denied') {
+        const permission = await Notification.requestPermission();
+        if (permission === 'granted') {
+          setNotificationsEnabled(true);
+          try {
+            new Notification('AeroGes', {
+              body: 'Les notifications sont maintenant activées !',
+            });
+          } catch (notifError) {
+            console.error('Error showing notification:', notifError);
+            // Continuer même si la notification de test échoue
+          }
+        }
+      } else {
+        alert('Les notifications ont été bloquées. Veuillez les autoriser dans les paramètres de votre navigateur.');
       }
-    } else {
-      alert('Les notifications ont été bloquées. Veuillez les autoriser dans les paramètres de votre navigateur.');
+    } catch (error) {
+      console.error('Error toggling notifications:', error);
+      alert('⚠️ Erreur lors de l\'activation des notifications.');
     }
   };
 
