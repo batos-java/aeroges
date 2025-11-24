@@ -24,36 +24,41 @@ export function AuthorizationForm({ onSubmit, onCancel, editingAuth }: Authoriza
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (type === 'ASA') {
-      // RÈGLE MÉTIER: Ajouter 3 jours à la date de fin pour les ASA
-      let adjustedValidTo = formData.validTo;
-      if (adjustedValidTo) {
-        const endDate = new Date(adjustedValidTo);
-        endDate.setDate(endDate.getDate() + 3);
-        adjustedValidTo = endDate.toISOString().split('T')[0];
-      }
+    try {
+      if (type === 'ASA') {
+        // RÈGLE MÉTIER: Ajouter 3 jours à la date de fin pour les ASA
+        let adjustedValidTo = formData.validTo;
+        if (adjustedValidTo) {
+          const endDate = new Date(adjustedValidTo);
+          endDate.setDate(endDate.getDate() + 3);
+          adjustedValidTo = endDate.toISOString().split('T')[0];
+        }
 
-      onSubmit({
-        type: 'ASA',
-        number: formData.number,
-        company: formData.company,
-        aircraftType: formData.aircraftType,
-        registration: formData.registration,
-        callSign: formData.callSign,
-        route: formData.route,
-        validFrom: formData.validFrom,
-        validTo: adjustedValidTo,
-      });
-    } else {
-      onSubmit({
-        type: 'AEA',
-        number: formData.number,
-        company: formData.company,
-        aircraftType: formData.aircraftType,
-        registration: formData.registration,
-        validFrom: formData.validFrom,
-        validTo: formData.validTo,
-      });
+        onSubmit({
+          type: 'ASA',
+          number: formData.number,
+          company: formData.company,
+          aircraftType: formData.aircraftType,
+          registration: formData.registration,
+          callSign: formData.callSign,
+          route: formData.route,
+          validFrom: formData.validFrom,
+          validTo: adjustedValidTo,
+        });
+      } else {
+        onSubmit({
+          type: 'AEA',
+          number: formData.number,
+          company: formData.company,
+          aircraftType: formData.aircraftType,
+          registration: formData.registration,
+          validFrom: formData.validFrom,
+          validTo: formData.validTo,
+        });
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      alert('⚠️ Erreur lors de l\'enregistrement. Veuillez réessayer.');
     }
   };
 

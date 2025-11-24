@@ -41,6 +41,7 @@ export type Authorization = ASAAuthorization | AEAAuthorization;
 type View = 'list' | 'add' | 'extract' | 'details';
 
 export default function App() {
+  // 🔍 TEST: Forcer l'affichage du LoginForm
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authorizations, setAuthorizations] = useState<Authorization[]>([]);
   const [currentView, setCurrentView] = useState<View>('list');
@@ -54,14 +55,30 @@ export default function App() {
   // Vérifier l'authentification au chargement
   useEffect(() => {
     const authStatus = localStorage.getItem('isAuthenticated');
-    setIsAuthenticated(authStatus === 'true');
+    if (authStatus === 'true') {
+      setIsAuthenticated(true);
+    }
   }, []);
 
   // Charger les données depuis localStorage
   useEffect(() => {
-    const stored = localStorage.getItem('aeroges-authorizations');
-    if (stored) {
-      setAuthorizations(JSON.parse(stored));
+    try {
+      const stored = localStorage.getItem('aeroges-authorizations');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        // Valider que c'est un tableau
+        if (Array.isArray(parsed)) {
+          setAuthorizations(parsed);
+        } else {
+          console.error('Invalid data format in localStorage, resetting...');
+          localStorage.removeItem('aeroges-authorizations');
+        }
+      }
+    } catch (error) {
+      console.error('Error loading data from localStorage:', error);
+      // En cas d'erreur de parsing, nettoyer les données corrompues
+      localStorage.removeItem('aeroges-authorizations');
+      alert('⚠️ Erreur de chargement des données. Les données ont été réinitialisées.');
     }
     
     // Vérifier les permissions de notification
@@ -72,7 +89,12 @@ export default function App() {
 
   // Sauvegarder les données dans localStorage
   useEffect(() => {
-    localStorage.setItem('aeroges-authorizations', JSON.stringify(authorizations));
+    try {
+      localStorage.setItem('aeroges-authorizations', JSON.stringify(authorizations));
+    } catch (error) {
+      console.error('Error saving data to localStorage:', error);
+      alert('⚠️ Erreur lors de la sauvegarde des données. Vérifiez l\'espace de stockage disponible.');
+    }
   }, [authorizations]);
 
   // Vérifier les autorisations expirantes et envoyer des notifications
