@@ -5,6 +5,8 @@ import { AuthorizationForm } from './components/AuthorizationForm';
 import { TextExtractor } from './components/TextExtractor';
 import { AuthorizationDetails } from './components/AuthorizationDetails';
 import { InstallPrompt } from './components/InstallPrompt';
+import { LoginForm } from './components/LoginForm';
+import { SettingsPanel } from './components/SettingsPanel';
 
 export type AuthorizationType = 'ASA' | 'AEA';
 
@@ -39,6 +41,7 @@ export type Authorization = ASAAuthorization | AEAAuthorization;
 type View = 'list' | 'add' | 'extract' | 'details';
 
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authorizations, setAuthorizations] = useState<Authorization[]>([]);
   const [currentView, setCurrentView] = useState<View>('list');
   const [selectedAuth, setSelectedAuth] = useState<Authorization | null>(null);
@@ -47,6 +50,12 @@ export default function App() {
   const [filterType, setFilterType] = useState<'all' | 'ASA' | 'AEA'>('all');
   const [notificationsEnabled, setNotificationsEnabled] = useState(false);
   const [showNotificationSettings, setShowNotificationSettings] = useState(false);
+
+  // Vérifier l'authentification au chargement
+  useEffect(() => {
+    const authStatus = localStorage.getItem('isAuthenticated');
+    setIsAuthenticated(authStatus === 'true');
+  }, []);
 
   // Charger les données depuis localStorage
   useEffect(() => {
@@ -123,6 +132,22 @@ export default function App() {
     }
   };
 
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('lastLogin');
+    setIsAuthenticated(false);
+    setCurrentView('list');
+  };
+
+  // Si non authentifié, afficher le formulaire de connexion
+  if (!isAuthenticated) {
+    return <LoginForm onLoginSuccess={handleLogin} />;
+  }
+
   const addAuthorization = (auth: Omit<Authorization, 'id' | 'createdAt'>) => {
     const newAuth: Authorization = {
       ...auth,
@@ -180,28 +205,31 @@ export default function App() {
         <div className="px-4 py-3">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3 flex-1 min-w-0">
-              <div className="bg-indigo-600 p-2.5 rounded-lg flex-shrink-0">
+              <div className="bg-blue-600 p-2.5 rounded-lg flex-shrink-0">
                 <Plane className="w-5 h-5 text-white" />
               </div>
               <div className="min-w-0">
-                <h1 className="text-indigo-900 truncate">AeroGes</h1>
+                <h1 className="text-gray-900 truncate">AeroGes</h1>
                 <p className="text-gray-500 text-xs truncate">Gestion des autorisations</p>
               </div>
             </div>
-            {currentView === 'list' && (
-              <button
-                onClick={toggleNotifications}
-                className="p-2.5 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0"
-                title={notificationsEnabled ? 'Désactiver les notifications' : 'Activer les notifications'}
-                aria-label={notificationsEnabled ? 'Notifications activées' : 'Notifications désactivées'}
-              >
-                {notificationsEnabled ? (
-                  <Bell className="w-5 h-5 text-indigo-600" />
-                ) : (
-                  <BellOff className="w-5 h-5 text-gray-400" />
-                )}
-              </button>
-            )}
+            <div className="flex items-center gap-2">
+              {currentView === 'list' && (
+                <button
+                  onClick={toggleNotifications}
+                  className="p-2.5 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0"
+                  title={notificationsEnabled ? 'Désactiver les notifications' : 'Activer les notifications'}
+                  aria-label={notificationsEnabled ? 'Notifications activées' : 'Notifications désactivées'}
+                >
+                  {notificationsEnabled ? (
+                    <Bell className="w-5 h-5 text-blue-600" />
+                  ) : (
+                    <BellOff className="w-5 h-5 text-gray-400" />
+                  )}
+                </button>
+              )}
+              <SettingsPanel onLogout={handleLogout} />
+            </div>
           </div>
 
           {/* Search Bar - Only on list view */}
@@ -214,7 +242,7 @@ export default function App() {
                   placeholder="Rechercher une autorisation..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2.5 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
+                  className="w-full pl-9 pr-4 py-2.5 text-sm bg-gray-100 text-gray-900 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -224,8 +252,8 @@ export default function App() {
                   onClick={() => setFilterType('all')}
                   className={`px-4 py-2 rounded-lg transition-colors text-sm ${
                     filterType === 'all'
-                      ? 'bg-indigo-600 text-white'
-                      : 'bg-gray-100 text-gray-700'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-200 text-gray-700'
                   }`}
                 >
                   Tout
@@ -234,8 +262,8 @@ export default function App() {
                   onClick={() => setFilterType('ASA')}
                   className={`px-4 py-2 rounded-lg transition-colors text-sm ${
                     filterType === 'ASA'
-                      ? 'bg-indigo-600 text-white'
-                      : 'bg-gray-100 text-gray-700'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-200 text-gray-700'
                   }`}
                 >
                   ASA
@@ -244,8 +272,8 @@ export default function App() {
                   onClick={() => setFilterType('AEA')}
                   className={`px-4 py-2 rounded-lg transition-colors text-sm ${
                     filterType === 'AEA'
-                      ? 'bg-indigo-600 text-white'
-                      : 'bg-gray-100 text-gray-700'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-200 text-gray-700'
                   }`}
                 >
                   AEA
@@ -301,14 +329,14 @@ export default function App() {
           <div className="flex gap-3">
             <button
               onClick={() => setCurrentView('extract')}
-              className="flex-1 bg-indigo-600 text-white px-4 py-3 rounded-lg flex items-center justify-center gap-2 shadow-lg hover:bg-indigo-700 transition-colors"
+              className="flex-1 bg-blue-600 text-white px-4 py-3 rounded-lg flex items-center justify-center gap-2 shadow-lg hover:bg-blue-700 transition-colors"
             >
               <Search className="w-5 h-5" />
               Extraire
             </button>
             <button
               onClick={() => setCurrentView('add')}
-              className="flex-1 bg-white border-2 border-indigo-600 text-indigo-600 px-4 py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-indigo-50 transition-colors"
+              className="flex-1 bg-white border-2 border-blue-600 text-blue-600 px-4 py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-blue-50 transition-colors"
             >
               <Plus className="w-5 h-5" />
               Ajouter

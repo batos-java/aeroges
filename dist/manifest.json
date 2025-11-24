@@ -1,0 +1,20 @@
+{
+  "name": "AeroGes - Gestion des Autorisations",
+  "short_name": "AeroGes",
+  "description": "Application de gestion des autorisations ASA et AEA pour aéronefs",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4f46e5",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "business"]
+}

@@ -4,7 +4,7 @@ import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
-  base: './', // ⚠️ Chemin relatif pour compatibilité maximale
+  base: '/aeroges/', // 🚀 Remplacez "aeroges" par le nom exact de votre repo GitHub
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
     alias: {
@@ -51,7 +51,7 @@ export default defineConfig({
   },
   build: {
     target: 'esnext',
-    outDir: 'build', // ✅ Correspond au dossier généré par Vite
+    outDir: 'dist', // ✅ GitHub Pages utilise "dist" par convention
   },
   server: {
     port: 3000,
