@@ -115,14 +115,6 @@ export function LoginForm({ onLoginSuccess }: LoginFormProps) {
             >
               {isLoading ? 'Connexion...' : 'Se connecter'}
             </Button>
-
-            <div className="text-xs text-gray-500 text-center pt-4 border-t">
-              <p>Identifiants par défaut :</p>
-              <p className="font-mono mt-1">
-                Utilisateur : <span className="font-semibold">admin</span><br />
-                Mot de passe : <span className="font-semibold">aeroges2024</span>
-              </p>
-            </div>
           </form>
         </CardContent>
       </Card>
